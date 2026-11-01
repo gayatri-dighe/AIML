@@ -1,0 +1,80 @@
+
+# Rule-Based Expert System for Student Employability
+# Using Propositional Logic and Backward Chaining
+
+print("STUDENT EMPLOYABILITY EXPERT SYSTEM")
+
+# Input student details
+technical = input("Do you have technical skills? (yes/no): ").lower()
+communication = input("Do you have communication skills? (yes/no): ").lower()
+academic = input("Do you have good academic performance? (yes/no): ").lower()
+project = input("Do you have project experience? (yes/no): ").lower()
+
+# Store facts
+facts = set()
+
+if technical == "yes":
+    facts.add("Technical_Skills")
+
+if communication == "yes":
+    facts.add("Communication_Skills")
+
+if academic == "yes":
+    facts.add("Good_Academics")
+
+if project == "yes":
+    facts.add("Project_Experience")
+
+
+# Backward Chaining Function
+def backward_chaining(goal):
+
+    # If goal is already a known fact
+    if goal in facts:
+        return True
+
+    # Rule 1: Basic Employability
+    if goal == "Basic_Employability":
+        return (
+            backward_chaining("Technical_Skills") and
+            backward_chaining("Communication_Skills")
+        )
+
+    # Rule 2: Job Ready
+    elif goal == "Job_Ready":
+        return (
+            backward_chaining("Basic_Employability") and
+            backward_chaining("Project_Experience")
+        )
+
+    # Rule 3: Strong Technical Foundation
+    elif goal == "Strong_Technical_Foundation":
+        return (
+            backward_chaining("Good_Academics") and
+            backward_chaining("Technical_Skills")
+        )
+
+    # Rule 4: Highly Employable
+    elif goal == "Highly_Employable":
+        return (
+            backward_chaining("Job_Ready") and
+            backward_chaining("Strong_Technical_Foundation")
+        )
+
+    return False
+
+
+# Check student employability
+print("\n--- EXPERT SYSTEM RESULT ---")
+
+if backward_chaining("Highly_Employable"):
+    print("Result: Highly Employable Student")
+
+elif backward_chaining("Job_Ready"):
+    print("Result: Job Ready Student")
+
+elif backward_chaining("Basic_Employability"):
+    print("Result: Basic Employability")
+
+else:
+    print("Result: More Skills Development Required")
