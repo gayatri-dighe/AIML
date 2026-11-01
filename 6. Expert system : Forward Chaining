@@ -1,0 +1,80 @@
+
+# Rule-Based Expert System for Student Employability
+# Using Propositional Logic and Forward Chaining
+
+# Initial facts
+facts = set()
+
+print("STUDENT EMPLOYABILITY EXPERT SYSTEM")
+
+technical = input("Do you have technical skills? (yes/no): ").lower()
+communication = input("Do you have communication skills? (yes/no): ").lower()
+academic = input("Do you have good academic performance? (yes/no): ").lower()
+project = input("Do you have project experience? (yes/no): ").lower()
+
+# Store facts
+if technical == "yes":
+    facts.add("Technical_Skills")
+
+if communication == "yes":
+    facts.add("Communication_Skills")
+
+if academic == "yes":
+    facts.add("Good_Academics")
+
+if project == "yes":
+    facts.add("Project_Experience")
+
+
+# Forward Chaining
+def forward_chaining(facts):
+
+    while True:
+        old_facts = len(facts)
+
+        # Rule 1
+        if ("Technical_Skills" in facts and
+            "Communication_Skills" in facts):
+            facts.add("Basic_Employability")
+
+        # Rule 2
+        if ("Basic_Employability" in facts and
+            "Project_Experience" in facts):
+            facts.add("Job_Ready")
+
+        # Rule 3
+        if ("Good_Academics" in facts and
+            "Technical_Skills" in facts):
+            facts.add("Strong_Technical_Foundation")
+
+        # Rule 4
+        if ("Job_Ready" in facts and
+            "Strong_Technical_Foundation" in facts):
+            facts.add("Highly_Employable")
+
+        if len(facts) == old_facts:
+            break
+
+    return facts
+
+
+# Execute Expert System
+result = forward_chaining(facts)
+
+print("\n--- EXPERT SYSTEM RESULT ---")
+
+if "Highly_Employable" in result:
+    print("Result: Highly Employable Student")
+
+elif "Job_Ready" in result:
+    print("Result: Job Ready Student")
+
+elif "Basic_Employability" in result:
+    print("Result: Basic Employability")
+
+else:
+    print("Result: More Skills Development Required")
+
+print("\nGenerated Facts:")
+for fact in sorted(result):
+    print(fact)
