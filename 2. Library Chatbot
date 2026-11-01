@@ -1,0 +1,35 @@
+
+# Rule-Based Chatbot for College Library
+
+def library_chatbot(user_input):
+
+    user_input = user_input.lower()
+
+    if "timing" in user_input:
+        return "Library Timing: 9 AM to 5 PM."
+
+    elif "fine" in user_input:
+        return "Library fine is Rs. 5 per day for late book submission."
+
+    elif "renew" in user_input:
+        return "You can renew your book by visiting the library."
+
+    elif "membership" in user_input:
+        return "Students can get library membership using their college ID."
+
+    else:
+        return "Sorry, I don't understand. Please ask about timing, fine, renew or membership."
+
+
+# Main program
+print("WELCOME TO COLLEGE LIBRARY CHATBOT")
+
+while True:
+    user = input("\nYou: ")
+
+    if user.lower() == "exit":
+        print("Chatbot: Thank you! Visit the library again.")
+        break
+
+    response = library_chatbot(user)
+    print("Chatbot:", response)
