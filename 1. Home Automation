@@ -1,0 +1,32 @@
+# Simple Intelligent Agent for Smart Home Controller
+
+def smart_home_agent(motion, temperature, light):
+
+    # Control lights
+    if motion == "yes" and light == "dark":
+        print("Light: ON")
+    else:
+        print("Light: OFF")
+
+    # Control fan
+    if temperature > 30:
+        print("Fan: ON")
+    else:
+        print("Fan: OFF")
+
+    # Control AC
+    if temperature > 35:
+        print("AC: ON")
+    else:
+        print("AC: OFF")
+
+
+# Main program
+print("SMART HOME CONTROLLER")
+
+motion = input("Is anyone present? (yes/no): ").lower()
+temperature = float(input("Enter room temperature: "))
+light = input("Is the room dark? (dark/bright): ").lower()
+
+# Intelligent agent makes decisions
+smart_home_agent(motion, temperature, light)
