@@ -1,0 +1,81 @@
+1. import libraries
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.cluster import KMeans
+
+
+2. Download dataset
+
+url = "https://raw.githubusercontent.com/shwetabhardwaj007/Mall-Customer-Segmentation/master/Mall_Customers.csv"
+
+df = pd.read_csv(url)
+
+print("Mall Customers Dataset:")
+print(df.head())
+
+
+3. Select annual income and spending score
+
+X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
+
+print(X.head())
+
+
+
+
+4. Calculate inertia for k = 1 to 10
+
+inertia = []
+
+for k in range(1, 11):
+    model = KMeans(n_clusters=k, random_state=42, n_init=10)
+    model.fit(X)
+
+    inertia.append(model.inertia_)
+
+print("Inertia Values:")
+for k, value in enumerate(inertia, start=1):
+    print("K =", k, "Inertia =", value)
+
+
+ 
+ 5. Plot the elboe curve
+
+ plt.plot(range(1, 11), inertia, marker='o')
+
+plt.xlabel('Number of Clusters (K)')
+plt.ylabel('Inertia')
+plt.title('Elbow Method for Optimal K')
+
+plt.xticks(range(1, 11))
+plt.grid(True)
+plt.show()
+
+
+
+6. choose optimal K and perform K - means clustering
+
+kmeans = KMeans(n_clusters=5, random_state=42, n_init=10)
+
+df['Cluster'] = kmeans.fit_predict(X)
+
+print(df.head())
+
+
+
+7. Visualize the clusters
+
+plt.scatter(
+    X['Annual Income (k$)'],
+    X['Spending Score (1-100)'],
+    c=df['Cluster'],
+    cmap='rainbow'
+)
+
+plt.xlabel('Annual Income (k$)')
+plt.ylabel('Spending Score (1-100)')
+plt.title('K-Means Customer Clustering')
+
+plt.show()
