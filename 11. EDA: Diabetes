@@ -1,0 +1,205 @@
+1. import libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+print("Libraries imported successfully!")
+
+
+2. Download dataset
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
+
+columns = [
+    'Pregnancies', 'Glucose', 'BloodPressure',
+    'SkinThickness', 'Insulin', 'BMI',
+    'DiabetesPedigreeFunction', 'Age', 'Outcome'
+]
+
+df = pd.read_csv(url, names=columns)
+
+print("Diabetes Dataset loaded successfully!")
+
+
+3. Display datset information
+print("First five rows:")
+display(df.head())
+
+print("\nDataset Shape:")
+print(df.shape)
+
+print("\nDataset Information:")
+df.info()
+
+print("\nColumn Names:")
+print(df.columns.tolist())
+
+4. Data cleaning
+
+# Check duplicate records
+print("Duplicate records:", df.duplicated().sum())
+
+# Remove duplicate records
+df.drop_duplicates(inplace=True)
+
+print("\nData cleaning completed!")
+
+print("\nCleaned Dataset:")
+display(df.head())
+
+print("\nDataset Shape:")
+print(df.shape)
+
+
+5. Missing value handling
+
+# Replace invalid zero values with NaN
+cols = [
+    'Glucose', 'BloodPressure', 'SkinThickness',
+    'Insulin', 'BMI'
+]
+
+for col in cols:
+    df[col] = df[col].replace(0, np.nan)
+
+print("Missing values before handling:")
+print(df.isnull().sum())
+
+# Fill missing values using median
+for col in cols:
+    df[col] = df[col].fillna(df[col].median())
+
+print("\nMissing values after handling:")
+print(df.isnull().sum())
+
+
+6. Encoding techniques
+
+df['Outcome'] = df['Outcome'].astype(int)
+
+print("Encoding completed successfully!")
+
+print("\nOutcome values:")
+print(df['Outcome'].value_counts())
+
+display(df.head())
+
+
+
+
+7. Statistical analysis
+
+print("Statistical Summary:")
+display(df.describe())
+
+print("\nMean:")
+print(df.mean())
+
+print("\nMedian:")
+print(df.median())
+
+print("\nStandard Deviation:")
+print(df.std())
+
+print("\nCorrelation Matrix:")
+display(df.corr())
+
+
+
+8. Data visualization: histogram
+
+df.hist(figsize=(15, 10), bins=15, edgecolor='black')
+
+plt.suptitle("Histograms of Diabetes Dataset", fontsize=16)
+
+plt.tight_layout()
+plt.show()
+
+
+9. data visualization: boxplot
+
+plt.figure(figsize=(15, 10))
+
+for i, col in enumerate(df.columns[:-1]):
+    plt.subplot(3, 3, i + 1)
+    sns.boxplot(y=df[col])
+    plt.title("Boxplot of " + col)
+
+plt.tight_layout()
+plt.show()
+
+
+10. Split dataset into features and target
+
+X = df.drop('Outcome', axis=1)
+
+y = df['Outcome']
+
+print("Features:")
+display(X.head())
+
+print("\nTarget:")
+print(y.head())
+
+
+
+11. training and tesiing split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+print("Training and Testing Split Completed!")
+
+print("\nTraining Features:", X_train.shape)
+print("Testing Features:", X_test.shape)
+
+print("\nTraining Target:", y_train.shape)
+print("Testing Target:", y_test.shape)
+
+
+
+12. Feature scaling
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+
+X_test_scaled = scaler.transform(X_test)
+
+print("Feature Scaling completed successfully!")
+
+print("\nScaled Training Data:")
+print(X_train_scaled[:5])
+
+print("\nScaled Testing Data:")
+print(X_test_scaled[:5])
+
+
+
+13. Final result
+
+print("EDA on Diabetes Dataset Completed Successfully!")
+
+print("\nFinal Dataset Details:")
+
+print("Total Records:", len(df))
+
+print("Training Records:", len(X_train))
+
+print("Testing Records:", len(X_test))
+
+print("\nMissing Values:", df.isnull().sum().sum())
+
+print("\nAll preprocessing operations completed successfully!")
+
+display(df.head())
