@@ -1,0 +1,231 @@
+1. Import libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+print("Libraries imported successfully!")
+
+
+
+
+2. Download and load dataset
+
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data"
+
+columns = [
+    'age', 'sex', 'cp', 'trestbps', 'chol',
+    'fbs', 'restecg', 'thalach', 'exang',
+    'oldpeak', 'slope', 'ca', 'thal', 'target'
+]
+
+df = pd.read_csv(url, names=columns, na_values='?')
+
+print("Dataset loaded successfully!")
+
+df.head()
+
+
+
+
+3. Display dataset information
+
+print("First five rows:")
+display(df.head())
+
+print("\nDataset Shape:")
+print(df.shape)
+
+print("\nDataset Information:")
+df.info()
+
+print("\nColumn Names:")
+print(df.columns.tolist())
+
+
+4. Data Cleaning
+
+# Convert columns into numeric values
+df = df.apply(pd.to_numeric, errors='coerce')
+
+# Remove duplicate records
+df.drop_duplicates(inplace=True)
+
+print("Data cleaning completed!")
+
+print("\nCleaned Dataset:")
+display(df.head())
+
+print("\nDataset Shape:")
+print(df.shape)
+
+
+5. Missing value Handling
+
+print("Missing values before handling:")
+print(df.isnull().sum())
+
+# Remove rows where target is missing
+df.dropna(subset=['target'], inplace=True)
+
+# Handle missing values in feature columns
+for col in df.columns.drop('target'):
+    df[col] = df[col].fillna(df[col].median())
+
+print("\nMissing values after handling:")
+print(df.isnull().sum())
+
+
+
+6. Encoding Techniques
+
+df['target'] = (df['target'] > 0).astype(int)
+
+print("Target encoding completed!")
+
+print("\nTarget values:")
+print(df['target'].value_counts())
+
+display(df.head())
+
+
+7. Statistical analysis
+
+print("Statistical Analysis:")
+display(df.describe())
+
+print("\nMean:")
+print(df.mean())
+
+print("\nMedian:")
+print(df.median())
+
+print("\nStandard Deviation:")
+print(df.std())
+
+print("\nCorrelation Matrix:")
+display(df.corr())
+
+
+8. Data Visualization: Histogram
+
+df.hist(figsize=(15, 10), bins=15, edgecolor='black')
+
+plt.suptitle("Histograms of Heart Disease Dataset", fontsize=16)
+
+plt.tight_layout()
+plt.show()
+
+
+9. Data Visualization: Boxplots
+
+plt.figure(figsize=(15, 10))
+
+for i, col in enumerate(df.columns[:-1]):
+    plt.subplot(3, 5, i + 1)
+    sns.boxplot(y=df[col])
+    plt.title(col)
+
+plt.tight_layout()
+plt.show()
+
+
+
+
+10. Split dataset into features and target
+
+# Independent variables
+X = df.drop('target', axis=1)
+
+# Dependent variable
+y = df['target']
+
+print("Features:")
+display(X.head())
+
+print("\nTarget:")
+print(y.head())
+
+
+
+11. Training and testing split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+print("Training and Testing Split Completed!")
+
+print("\nTraining Features:", X_train.shape)
+print("Testing Features:", X_test.shape)
+
+print("\nTraining Target:", y_train.shape)
+print("Testing Target:", y_test.shape)
+
+
+
+
+12. Feature scaling and one-hot encoding
+numerical_cols = [
+    'age', 'trestbps', 'chol', 'thalach', 'oldpeak'
+]
+
+categorical_cols = [
+    'sex', 'cp', 'fbs', 'restecg',
+    'exang', 'slope', 'ca', 'thal'
+]
+
+# Numerical pipeline
+num_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', StandardScaler())
+])
+
+# Categorical pipeline
+cat_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('encoder', OneHotEncoder(handle_unknown='ignore'))
+])
+
+# Combine pipelines
+preprocessor = ColumnTransformer([
+    ('num', num_pipeline, numerical_cols),
+    ('cat', cat_pipeline, categorical_cols)
+])
+
+# Fit and transform training data
+X_train_scaled = preprocessor.fit_transform(X_train)
+
+# Transform testing data
+X_test_scaled = preprocessor.transform(X_test)
+
+print("Feature Scaling and Encoding Completed!")
+
+print("\nScaled Training Data Shape:", X_train_scaled.shape)
+print("Scaled Testing Data Shape:", X_test_scaled.shape)
+
+
+
+13. final result
+print("EDA on Heart Disease Dataset Completed Successfully!")
+
+print("\nFinal Dataset Details:")
+print("Total Records:", len(df))
+print("Training Records:", len(X_train))
+print("Testing Records:", len(X_test))
+
+print("\nMissing Values:", df.isnull().sum().sum())
+
+print("\nAll preprocessing operations completed successfully!")
+
+
