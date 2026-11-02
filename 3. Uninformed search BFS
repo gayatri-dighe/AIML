@@ -64,3 +64,119 @@ if path:
     print("Total Steps:", len(path) - 1)
 else:
     print("No path found!")
+
+
+
+
+
+
+
+
+
+#taking user input 
+
+# Breadth First Search (BFS) for Maze Navigation
+
+from collections import deque
+
+# Take maze size from user
+rows = int(input("Enter number of rows: "))
+cols = int(input("Enter number of columns: "))
+
+maze = []
+
+print("Enter maze (0 = Free path, 1 = Wall):")
+
+for i in range(rows):
+    row = list(map(int, input().split()))
+    maze.append(row)
+
+# Take starting and goal positions
+print("Enter starting position (row column):")
+start = tuple(map(int, input().split()))
+
+print("Enter goal position (row column):")
+goal = tuple(map(int, input().split()))
+
+
+def bfs(maze, start, goal):
+
+    rows = len(maze)
+    cols = len(maze[0])
+
+    queue = deque([[start]])
+    visited = set([start])
+
+    # Up, Down, Left, Right
+    directions = [
+        (-1, 0), (1, 0),
+        (0, -1), (0, 1)
+    ]
+
+    while queue:
+
+        path = queue.popleft()
+        x, y = path[-1]
+
+        if (x, y) == goal:
+            return path
+
+        for dx, dy in directions:
+
+            nx = x + dx
+            ny = y + dy
+
+            if (0 <= nx < rows and
+                0 <= ny < cols and
+                maze[nx][ny] == 0 and
+                (nx, ny) not in visited):
+
+                visited.add((nx, ny))
+                queue.append(path + [(nx, ny)])
+
+    return None
+
+
+# Execute BFS
+if (0 <= start[0] < rows and
+    0 <= start[1] < cols and
+    0 <= goal[0] < rows and
+    0 <= goal[1] < cols and
+    maze[start[0]][start[1]] == 0 and
+    maze[goal[0]][goal[1]] == 0):
+
+    path = bfs(maze, start, goal)
+
+    if path:
+        print("\nShortest Path Found:")
+
+        for position in path:
+            print(position)
+
+        print("Total Steps:", len(path) - 1)
+
+    else:
+        print("No path found!")
+
+else:
+    print("Invalid starting or goal position!")
+
+
+
+
+Enter number of rows: 2
+Enter number of columns: 2
+Enter maze (0 = Free path, 1 = Wall):
+0 0
+1 0
+Enter starting position (row column):
+0 0
+Enter goal position (row column):
+1 1
+
+Shortest Path Found:
+(0, 0)
+(0, 1)
+(1, 1)
+Total Steps: 2
+
