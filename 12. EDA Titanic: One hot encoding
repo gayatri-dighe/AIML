@@ -1,0 +1,48 @@
+1. import libraries
+
+import pandas as pd
+import numpy as np
+
+2. Load The titanic dataset
+url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"
+
+df = pd.read_csv(url)
+
+print("Original Dataset:")
+df.head()
+
+
+3. Check missing values
+
+print("Missing values:")
+print(df.isnull().sum())
+
+
+4. Handle missing values in embarked
+
+df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
+
+print("Missing values in Embarked after handling:")
+print(df['Embarked'].isnull().sum())
+
+
+5. Apply one-hot encoding
+
+df_encoded = pd.get_dummies(
+    df,
+    columns=['Sex', 'Embarked', 'Pclass'],
+    dtype=int
+)
+
+print("One-Hot Encoding Applied Successfully!")
+
+
+6. Dsplay dataset shape
+
+print("Shape of Encoded Dataset:", df_encoded.shape)
+
+
+7. Dsplay first 5 rows
+
+print("First 5 Rows of Encoded Dataset:")
+df_encoded.head()
